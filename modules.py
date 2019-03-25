@@ -34,7 +34,7 @@ class CapsuleNetwork(nn.Module):
             [copy.deepcopy(capsule) for _ in range(n_primary_caps)])
 
         # 10 capsules with 16D output
-        self.digit_caps = CapsuleLayer(1152, 8, 10, 16, n_routing=n_routing)
+        self.digit_caps = CapsuleLayer(32*6*6, 8, 10, 16, n_routing=n_routing)
 
     def forward(self, x):
         x = self.layer1(x)
