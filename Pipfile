@@ -10,6 +10,9 @@ ipykernel = "*"
 torch = "*"
 numpy = "*"
 torchvision = "*"
+matplotlib = "*"
+tqdm = "*"
+tensorboardx = "*"
 
 [requires]
 python_version = "3.7"
