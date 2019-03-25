@@ -2,7 +2,6 @@
 
 Usage:
   train.py -r 3 -d 0.0005 -e 1 -b 128
-  train.py -r 3 -d 0.0005 -e 1 -b 128
 """
 
 import torch
@@ -17,7 +16,7 @@ from tqdm import tqdm
 from modules import CapsuleNetwork, Decoder
 
 
-def train(load_path=None, save_path='capsnet', n_routing=3, decoder_loss=0, n_epochs=1, batch_size=128, log_interval=10, test_interval=100, plot_reconstruction=False, writer=None, **kwargs):
+def train(load_path=None, save_path='capsnet', n_routing=3, decoder_loss=0, n_epochs=1, batch_size=128, log_interval=10, test_interval=100, writer=None, **kwargs):
     train_loader = torch.utils.data.DataLoader(
         datasets.MNIST(
             './data',
@@ -68,17 +67,8 @@ def train(load_path=None, save_path='capsnet', n_routing=3, decoder_loss=0, n_ep
             optimizer.step()
 
             if (batch_idx % log_interval == 0):
-                if plot_reconstruction:
-                    import matplotlib.pyplot as plt
-                    _, axes = plt.subplots(nrows=1, ncols=2,
-                                           sharex=True, sharey=True,
-                                           subplot_kw={'xticks': [],
-                                                       'yticks': []})
-                    axes[0].pcolor(data.flatten(1)[0].detach().numpy().reshape((28, 28)), cmap='Greys')
-                    axes[1].pcolor(reconstruction[0].detach().numpy().reshape((28, 28)), cmap='Greys')
-                    plt.savefig(save_path + f'{epoch}_{batch_idx}')
-                    writer.add_image('digit', vutils.make_grid(data[0], normalize=True, scale_each=True), n_iter)
-                    writer.add_image('reconstruction', vutils.make_grid(reconstruction[0].view(28, 28), normalize=True, scale_each=True), n_iter)
+                writer.add_image('digit', vutils.make_grid(data[0], normalize=True, scale_each=True), n_iter)
+                writer.add_image('reconstruction', vutils.make_grid(reconstruction[0].view(28, 28), normalize=True, scale_each=True), n_iter)
 
                 pbar.set_description('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f} = {:.6f} + {:.6f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
@@ -173,7 +163,6 @@ if __name__ == '__main__':
     parser.add_argument('--n_epochs', '-e', type=int, help="Number of epochs.", default=3)
     parser.add_argument('--batch_size', '-b', type=int, help="Batch size for training and testing.", default=128)
     parser.add_argument('--log_interval', '-l', type=int, help="Number of batches to report the training accuracy and loss.", default=10)
-    parser.add_argument('--plot_reconstruction', help="Flag to plot the reconstructions.", action='store_true')
 
     args = parser.parse_args()
     evaluate(**vars(args))

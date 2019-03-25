@@ -10,7 +10,6 @@ ipykernel = "*"
 torch = "*"
 numpy = "*"
 torchvision = "*"
-matplotlib = "*"
 tqdm = "*"
 tensorboardx = "*"
 
