@@ -1,3 +1,4 @@
+import math
 import copy
 import torch
 from torch import nn
@@ -68,10 +69,14 @@ class CapsuleLayer(nn.Module):
         self.out_caps = out_caps
         self.out_features = out_features
 
-        self.W = torch.randn((self.out_caps, self.in_caps, self.in_features, self.out_features),
-                             requires_grad=True)
+        self.W = nn.Parameter(torch.Tensor(self.out_caps, self.in_caps, self.in_features, self.out_features),
+                                 requires_grad=True)
 
         self.n_routing = n_routing
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        nn.init.kaiming_uniform_(self.W, a=math.sqrt(5))
 
     def forward(self, vs):
         '''vs: [batch_size, in_caps, in_features]'''
